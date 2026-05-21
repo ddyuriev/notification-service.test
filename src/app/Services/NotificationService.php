@@ -21,15 +21,29 @@ class NotificationService
 
     public function createBroadcast(string $channel, string $text, array $recipientIds, string $priority, string $idempotencyKey): array
     {
-        try {
-            $idempotency = IdempotencyKey::create([
-                'key' => $idempotencyKey,
-                'batch_id' => (string) Str::uuid(),
-                'status' => 'processing'
-            ]);
-        } catch (QueryException $e) {
-            // Если поймали unique constraint — ключ уже существует
-            $existing = IdempotencyKey::where('key', $idempotencyKey)->first();
+//        try {
+//            $idempotency = IdempotencyKey::create([
+//                'key' => $idempotencyKey,
+//                'batch_id' => (string) Str::uuid(),
+//                'status' => 'processing'
+//            ]);
+//        } catch (QueryException $e) {
+//            // Если поймали unique constraint — ключ уже существует
+//            $existing = IdempotencyKey::where('key', $idempotencyKey)->first();
+//            return [
+//                'batch_id' => $existing->batch_id,
+//                'status' => 'already_processed',
+//                'is_new' => false
+//            ];
+//        }
+
+
+
+/**/
+        // 1. Сначала ПРОВЕРЯЕМ наличие ключа через безопасный SELECT
+        $existing = IdempotencyKey::where('key', $idempotencyKey)->first();
+
+        if ($existing) {
             return [
                 'batch_id' => $existing->batch_id,
                 'status' => 'already_processed',
@@ -37,6 +51,13 @@ class NotificationService
             ];
         }
 
+        // 2. Если ключа нет — спокойно создаем. try-catch вокруг этого INSERT больше не нужен!
+        $idempotency = IdempotencyKey::create([
+            'key' => $idempotencyKey,
+            'batch_id' => (string) Str::uuid(),
+            'status' => 'processing'
+        ]);
+/**/
         $batchId = $idempotency->batch_id;
         
         $contacts = $this->userService->getContactsByUserIds($recipientIds);

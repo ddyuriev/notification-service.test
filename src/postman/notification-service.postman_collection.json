@@ -1,0 +1,103 @@
+{
+  "info": {
+    "_postman_id": "21d7e3e7-b3a2-428b-a35b-0dd56fd90023",
+    "name": "notification-service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4360317"
+  },
+  "item": [
+    {
+      "name": "broadcast",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": " application/json",
+            "type": "text"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": " test-120",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"channel\": \"sms\",\r\n    \"text\": \"Test message with code\",\r\n    \"recipient_ids\": [\r\n        \"user-111\",\r\n        \"user-112\",\r\n        \"user-211\",\r\n        \"user-212\"\r\n    ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/broadcast",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "broadcast"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "subscribers",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/subscribers/user-111/notifications",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "subscribers",
+            "user-111",
+            "notifications"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    }
+  ]
+}
